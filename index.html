@@ -3,17 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PokerPrime - Sua Evolução no Poker</title>
+  <title id="title-tag">PokerPrime - Sua Evolução no Poker</title>
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, sans-serif; background-color: #121212; color: white; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: white;
+    }
     header {
       background-color: #e50914;
       padding: 1rem 2rem;
       display: none;
       justify-content: space-between;
       align-items: center;
-      position: relative;
     }
     .profile-wrapper { position: relative; }
     #profile-menu {
@@ -26,14 +30,18 @@
       min-width: 200px;
       display: none;
     }
-    #profile-menu ul { list-style: none; padding: 0; margin: 0; }
+    #profile-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
     #profile-menu li {
       padding: 10px 20px;
       cursor: pointer;
     }
-    #profile-menu li:hover { background-color: #333; }
-    .container { padding: 2rem; }
-    .section { display: none; }
+    #profile-menu li:hover {
+      background-color: #333;
+    }
     .login-form {
       background-color: #1f1f1f;
       padding: 2rem;
@@ -42,7 +50,7 @@
       border-radius: 10px;
       text-align: center;
     }
-    .login-form input {
+    .login-form input, .login-form button {
       width: 100%;
       padding: 0.75rem;
       margin: 0.5rem 0;
@@ -50,22 +58,17 @@
       border: none;
     }
     .login-form button {
-      width: 100%;
-      padding: 0.75rem;
-      margin: 0.5rem 0;
-      border-radius: 5px;
-      border: none;
+      background-color: #e50914;
+      color: white;
       font-size: 1rem;
       cursor: pointer;
     }
     .google-btn {
+      background-color: #4285F4;
+      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #4285F4;
-      color: white;
-      border: none;
-      font-weight: bold;
     }
     .google-btn img {
       background-color: white;
@@ -80,160 +83,164 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 </head>
 <body>
-<header>
-  <div style="font-size: 2rem; font-weight: bold;">POKERPRIME</div>
-  <div class="profile-wrapper">
-    <img src="https://i.imgur.com/YYzGpEV.png" alt="Avatar do utilizador" onclick="toggleProfileMenu()" style="width:40px;height:40px;border-radius:50%;cursor:pointer;">
-    <div id="profile-menu">
-      <ul>
-        <li onclick="showSection('dashboard')">🏠 Início</li>
-        <li onclick="showSection('perfil')">👤 Meu Perfil</li>
-        <li onclick="showSection('config')">⚙️ Configurações</li>
-        <li onclick="showSection('suporte')">❓ Suporte</li>
-        <li onclick="logout()">🚪 Sair</li>
-      </ul>
+  <header>
+    <div id="brand-title" style="font-size: 2rem; font-weight: bold;">POKERPRIME</div>
+    <div class="profile-wrapper">
+      <img src="https://i.imgur.com/YYzGpEV.png" alt="Avatar" onclick="toggleProfileMenu()" style="width:40px;height:40px;border-radius:50%;cursor:pointer;">
+      <div id="profile-menu">
+        <ul>
+          <li id="menu-home" onclick="showSection('dashboard')">🏠 Início</li>
+          <li id="menu-profile" onclick="showSection('perfil')">👤 Meu Perfil</li>
+          <li id="menu-settings" onclick="showSection('config')">⚙️ Configurações</li>
+          <li id="menu-support" onclick="showSection('suporte')">❓ Suporte</li>
+          <li id="menu-logout" onclick="logout()">🚪 Sair</li>
+        </ul>
+      </div>
     </div>
+  </header>
+
+  <div class="login-form">
+    <h2 id="login-title">Login</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Senha">
+    <button id="login-button" onclick="login()">Entrar</button>
+    <button class="google-btn" id="google-button" onclick="loginWithGoogle()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+      Entrar com Google
+    </button>
   </div>
-</header>
-<div class="login-form">
-  <h2 id="login-title">Login</h2>
-  <input type="email" id="email" placeholder="Email" required>
-  <input type="password" id="password" placeholder="Senha" required>
-  <button id="login-button" onclick="login()">Entrar</button>
-  <button class="google-btn" id="google-button" onclick="loginWithGoogle()">
-    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
-    Entrar com Google
-  </button>
-</div>
-<div id="content" style="display:none;">
-  <div class="container">
-    <div id="dashboard" class="section" style="display:block;">
+
+  <div id="content" style="display:none;">
+    <div id="dashboard" class="section" style="padding: 2rem;">
       <h2>Continuar a ver</h2>
       <p id="welcome-text">Bem-vindo ao PokerPrime! Selecione uma seção acima.</p>
     </div>
-    <div id="perfil" class="section">
+
+    <div id="perfil" class="section" style="padding: 2rem;">
       <h2 id="profile-title">👤 Meu Perfil</h2>
       <input type="text" id="user-name" placeholder="Seu nome completo">
       <button onclick="saveUserName()">Salvar Nome</button>
     </div>
-    <div id="config" class="section">
+
+    <div id="config" class="section" style="padding: 2rem;">
       <h2 id="settings-title">⚙️ Configurações</h2>
-      <button onclick="toggleTheme()">Alternar Tema</button>
       <select id="language-select" onchange="changeLanguage(this.value)">
         <option value="pt-BR">🇧🇷 Português</option>
         <option value="en">🇺🇸 English</option>
       </select>
     </div>
-    <div id="suporte" class="section">
+
+    <div id="suporte" class="section" style="padding: 2rem;">
       <h2 id="support-title">❓ Suporte</h2>
       <p id="support-text">Precisa de ajuda? Fale com nosso time pelo WhatsApp: 📞 (11) 99999-9999</p>
     </div>
   </div>
-</div>
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyA-dZCP81GwzZGfUfzHpvx256kUBOTnfFc",
-    authDomain: "pokerflix13.firebaseapp.com",
-    projectId: "pokerflix13",
-    storageBucket: "pokerflix13.firebasestorage.app",
-    messagingSenderId: "693579295790",
-    appId: "1:693579295790:web:1450375882cbf8bb4603bf",
-    measurementId: "G-7SFBNGECLV"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const provider = new firebase.auth.GoogleAuthProvider();
 
-  function loginWithGoogle() {
-    auth.signInWithPopup(provider).then(() => showApp()).catch(e => alert(e.message));
-  }
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA-dZCP81GwzZGfUfzHpvx256kUBOTnfFc",
+      authDomain: "pokerflix13.firebaseapp.com",
+      projectId: "pokerflix13",
+      storageBucket: "pokerflix13.firebasestorage.app",
+      messagingSenderId: "693579295790",
+      appId: "1:693579295790:web:1450375882cbf8bb4603bf"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
 
-  function login() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    auth.signInWithEmailAndPassword(email, password).then(() => showApp()).catch(e => alert(e.message));
-  }
-
-  function logout() {
-    auth.signOut().then(() => location.reload());
-  }
-
-  function showApp() {
-    document.querySelector('.login-form').style.display = 'none';
-    document.querySelector('header').style.display = 'flex';
-    document.querySelector('#content').style.display = 'block';
-    applyLanguage(localStorage.getItem('lang') || 'pt-BR');
-  }
-
-  function toggleProfileMenu() {
-    const menu = document.getElementById('profile-menu');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-  }
-
-  function showSection(section) {
-    document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
-    document.getElementById(section).style.display = 'block';
-  }
-
-  function toggleTheme() {
-    document.body.classList.toggle('light-mode');
-  }
-
-  function changeLanguage(lang) {
-    localStorage.setItem('lang', lang);
-    applyLanguage(lang);
-  }
-
-  function applyLanguage(lang) {
-    const t = (id, value) => document.getElementById(id).textContent = value;
-    const p = (id, value) => document.getElementById(id).placeholder = value;
-    const g = (html) => document.getElementById('google-button').innerHTML = html;
-
-    if (lang === 'pt-BR') {
-      t("login-title", "Login");
-      t("login-button", "Entrar");
-      g('<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Entrar com Google');
-      p("email", "Email");
-      p("password", "Senha");
-      t("welcome-text", "Bem-vindo ao PokerPrime! Selecione uma seção acima.");
-      t("profile-title", "👤 Meu Perfil");
-      p("user-name", "Seu nome completo");
-      t("settings-title", "⚙️ Configurações");
-      t("support-title", "❓ Suporte");
-      t("support-text", "Precisa de ajuda? Fale com nosso time pelo WhatsApp: 📞 (11) 99999-9999");
-    } else if (lang === 'en') {
-      t("login-title", "Login");
-      t("login-button", "Login");
-      g('<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Continue with Google');
-      p("email", "Email");
-      p("password", "Password");
-      t("welcome-text", "Welcome to PokerPrime! Select a section above.");
-      t("profile-title", "👤 My Profile");
-      p("user-name", "Your full name");
-      t("settings-title", "⚙️ Settings");
-      t("support-title", "❓ Support");
-      t("support-text", "Need help? Contact us via WhatsApp: 📞 (11) 99999-9999");
+    function loginWithGoogle() {
+      auth.signInWithPopup(provider).then(() => showApp()).catch(e => alert(e.message));
     }
-  }
 
-  function saveUserName() {
-    const name = document.getElementById('user-name').value;
-    localStorage.setItem('userName', name);
-    alert('Nome salvo!');
-  }
+    function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      auth.signInWithEmailAndPassword(email, password).then(() => showApp()).catch(e => alert(e.message));
+    }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const lang = localStorage.getItem('lang') || 'pt-BR';
-    document.getElementById('language-select').value = lang;
-    applyLanguage(lang);
-    document.addEventListener('click', function(event) {
-      const profile = document.querySelector('.profile-wrapper');
+    function logout() {
+      auth.signOut().then(() => location.reload());
+    }
+
+    function showApp() {
+      document.querySelector('.login-form').style.display = 'none';
+      document.querySelector('header').style.display = 'flex';
+      document.querySelector('#content').style.display = 'block';
+      applyLanguage(localStorage.getItem('lang') || 'pt-BR');
+    }
+
+    function toggleProfileMenu() {
       const menu = document.getElementById('profile-menu');
-      if (menu && profile && !profile.contains(event.target)) {
-        menu.style.display = 'none';
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+
+    function saveUserName() {
+      const name = document.getElementById('user-name').value;
+      alert(`Nome salvo: ${name}`);
+    }
+
+    function changeLanguage(lang) {
+      localStorage.setItem('lang', lang);
+      applyLanguage(lang);
+    }
+
+    function applyLanguage(lang) {
+      const t = (id, value) => document.getElementById(id).textContent = value;
+      const p = (id, value) => document.getElementById(id).placeholder = value;
+      const g = (html) => document.getElementById('google-button').innerHTML = html;
+
+      if (lang === 'pt-BR') {
+        t("title-tag", "PokerPrime - Sua Evolução no Poker");
+        t("brand-title", "POKERPRIME");
+        t("menu-home", "🏠 Início");
+        t("menu-profile", "👤 Meu Perfil");
+        t("menu-settings", "⚙️ Configurações");
+        t("menu-support", "❓ Suporte");
+        t("menu-logout", "🚪 Sair");
+        t("login-title", "Login");
+        t("login-button", "Entrar");
+        g('<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Entrar com Google');
+        p("email", "Email");
+        p("password", "Senha");
+        t("welcome-text", "Bem-vindo ao PokerPrime! Selecione uma seção acima.");
+        t("profile-title", "👤 Meu Perfil");
+        p("user-name", "Seu nome completo");
+        t("settings-title", "⚙️ Configurações");
+        t("support-title", "❓ Suporte");
+        t("support-text", "Precisa de ajuda? Fale com nosso time pelo WhatsApp: 📞 (11) 99999-9999");
+      } else if (lang === 'en') {
+        t("title-tag", "PokerPrime - Your Evolution in Poker");
+        t("brand-title", "POKERPRIME");
+        t("menu-home", "🏠 Home");
+        t("menu-profile", "👤 My Profile");
+        t("menu-settings", "⚙️ Settings");
+        t("menu-support", "❓ Support");
+        t("menu-logout", "🚪 Logout");
+        t("login-title", "Login");
+        t("login-button", "Login");
+        g('<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Continue with Google');
+        p("email", "Email");
+        p("password", "Password");
+        t("welcome-text", "Welcome to PokerPrime! Select a section above.");
+        t("profile-title", "👤 My Profile");
+        p("user-name", "Your full name");
+        t("settings-title", "⚙️ Settings");
+        t("support-title", "❓ Support");
+        t("support-text", "Need help? Contact us via WhatsApp: 📞 (11) 99999-9999");
       }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const lang = localStorage.getItem('lang') || 'pt-BR';
+      document.getElementById('language-select').value = lang;
+      applyLanguage(lang);
     });
-  });
-</script>
+  </script>
 </body>
 </html>
