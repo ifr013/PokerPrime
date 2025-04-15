@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PokerPrime - A Tua Evolução no Poker</title>
+  <title>PokerPrime - Sua Evolução no Poker</title>
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: Arial, sans-serif; background-color: #121212; color: white; }
@@ -87,7 +87,7 @@
     <div id="profile-menu">
       <ul>
         <li onclick="showSection('dashboard')">🏠 Início</li>
-        <li onclick="showSection('perfil')">👤 O Meu Perfil</li>
+        <li onclick="showSection('perfil')">👤 Meu Perfil</li>
         <li onclick="showSection('config')">⚙️ Configurações</li>
         <li onclick="showSection('suporte')">❓ Suporte</li>
         <li onclick="logout()">🚪 Sair</li>
@@ -96,38 +96,37 @@
   </div>
 </header>
 <div class="login-form">
-  <h2>Iniciar sessão</h2>
+  <h2 id="login-title">Login</h2>
   <input type="email" id="email" placeholder="Email" required>
   <input type="password" id="password" placeholder="Senha" required>
-  <button onclick="login()">Entrar</button>
-  <button class="google-btn" onclick="loginWithGoogle()">
+  <button id="login-button" onclick="login()">Entrar</button>
+  <button class="google-btn" id="google-button" onclick="loginWithGoogle()">
     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
-    Continuar com Google
+    Entrar com Google
   </button>
 </div>
 <div id="content" style="display:none;">
   <div class="container">
     <div id="dashboard" class="section" style="display:block;">
       <h2>Continuar a ver</h2>
-      <p id="welcome-text">Bem-vindo ao PokerPrime! Seleciona uma secção acima.</p>
+      <p id="welcome-text">Bem-vindo ao PokerPrime! Selecione uma seção acima.</p>
     </div>
     <div id="perfil" class="section">
-      <h2 id="profile-title">👤 O Meu Perfil</h2>
-      <input type="text" id="user-name" placeholder="O teu nome completo">
-      <button onclick="saveUserName()">Guardar Nome</button>
+      <h2 id="profile-title">👤 Meu Perfil</h2>
+      <input type="text" id="user-name" placeholder="Seu nome completo">
+      <button onclick="saveUserName()">Salvar Nome</button>
     </div>
     <div id="config" class="section">
       <h2 id="settings-title">⚙️ Configurações</h2>
       <button onclick="toggleTheme()">Alternar Tema</button>
       <select id="language-select" onchange="changeLanguage(this.value)">
-        <option value="pt-PT">🇵🇹 Português (Portugal)</option>
-        <option value="pt-BR">🇧🇷 Português (Brasil)</option>
+        <option value="pt-BR">🇧🇷 Português</option>
         <option value="en">🇺🇸 English</option>
       </select>
     </div>
     <div id="suporte" class="section">
       <h2 id="support-title">❓ Suporte</h2>
-      <p id="support-text">Precisas de ajuda? Contacta-nos pelo WhatsApp: 📞 (11) 99999-9999</p>
+      <p id="support-text">Precisa de ajuda? Fale com nosso time pelo WhatsApp: 📞 (11) 99999-9999</p>
     </div>
   </div>
 </div>
@@ -163,7 +162,7 @@
     document.querySelector('.login-form').style.display = 'none';
     document.querySelector('header').style.display = 'flex';
     document.querySelector('#content').style.display = 'block';
-    applyLanguage(localStorage.getItem('lang') || 'pt-PT');
+    applyLanguage(localStorage.getItem('lang') || 'pt-BR');
   }
 
   function toggleProfileMenu() {
@@ -186,82 +185,45 @@
   }
 
   function applyLanguage(lang) {
-  const elements = {
-    "login-title": document.querySelector('.login-form h2'),
-    "login-button": document.querySelectorAll('.login-form button')[0],
-    "google-button": document.querySelectorAll('.login-form button')[1],
-    "email": document.getElementById('email'),
-    "password": document.getElementById('password'),
-    "welcome-text": document.getElementById('welcome-text'),
-    "profile-title": document.getElementById('profile-title'),
-    "user-name": document.getElementById('user-name'),
-    "settings-title": document.getElementById('settings-title'),
-    "support-title": document.getElementById('support-title'),
-    "support-text": document.getElementById('support-text')
-  };
+    const t = (id, value) => document.getElementById(id).textContent = value;
+    const p = (id, value) => document.getElementById(id).placeholder = value;
+    const g = (html) => document.getElementById('google-button').innerHTML = html;
 
-  if (lang === 'pt-PT') {
-    elements["login-title"].textContent = "Iniciar sessão";
-    elements["login-button"].textContent = "Entrar";
-    elements["google-button"].innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Continuar com Google';
-    elements["email"].placeholder = "Email";
-    elements["password"].placeholder = "Senha";
-    elements["welcome-text"].textContent = "Bem-vindo ao PokerPrime! Seleciona uma secção acima.";
-    elements["profile-title"].textContent = "👤 O Meu Perfil";
-    elements["user-name"].placeholder = "O teu nome completo";
-    elements["settings-title"].textContent = "⚙️ Configurações";
-    elements["support-title"].textContent = "❓ Suporte";
-    elements["support-text"].textContent = "Precisas de ajuda? Contacta-nos pelo WhatsApp: 📞 (11) 99999-9999";
-  } else if (lang === 'pt-BR') {
-    elements["login-title"].textContent = "Login";
-    elements["login-button"].textContent = "Entrar";
-    elements["google-button"].innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Entrar com Google';
-    elements["email"].placeholder = "Email";
-    elements["password"].placeholder = "Senha";
-    elements["welcome-text"].textContent = "Bem-vindo ao PokerPrime! Selecione uma seção acima.";
-    elements["profile-title"].textContent = "👤 Meu Perfil";
-    elements["user-name"].placeholder = "Seu nome completo";
-    elements["settings-title"].textContent = "⚙️ Configurações";
-    elements["support-title"].textContent = "❓ Suporte";
-    elements["support-text"].textContent = "Precisa de ajuda? Fale com nosso time pelo WhatsApp: 📞 (11) 99999-9999";
-  } else if (lang === 'en') {
-    elements["login-title"].textContent = "Login";
-    elements["login-button"].textContent = "Login";
-    elements["google-button"].innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Continue with Google';
-    elements["email"].placeholder = "Email";
-    elements["password"].placeholder = "Password";
-    elements["welcome-text"].textContent = "Welcome to PokerPrime! Select a section above.";
-    elements["profile-title"].textContent = "👤 My Profile";
-    elements["user-name"].placeholder = "Your full name";
-    elements["settings-title"].textContent = "⚙️ Settings";
-    elements["support-title"].textContent = "❓ Support";
-    elements["support-text"].textContent = "Need help? Contact us via WhatsApp: 📞 (11) 99999-9999";
-  }
-} else if (lang === 'pt-BR') {
-      document.getElementById('welcome-text').textContent = "Bem-vindo ao PokerPrime! Selecione uma seção acima.";
-      document.getElementById('profile-title').textContent = "👤 Meu Perfil";
-      document.getElementById('user-name').placeholder = "Seu nome completo";
-      document.getElementById('settings-title').textContent = "⚙️ Configurações";
-      document.getElementById('support-title').textContent = "❓ Suporte";
-      document.getElementById('support-text').textContent = "Precisa de ajuda? Fale com nosso time pelo WhatsApp: 📞 (11) 99999-9999";
+    if (lang === 'pt-BR') {
+      t("login-title", "Login");
+      t("login-button", "Entrar");
+      g('<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Entrar com Google');
+      p("email", "Email");
+      p("password", "Senha");
+      t("welcome-text", "Bem-vindo ao PokerPrime! Selecione uma seção acima.");
+      t("profile-title", "👤 Meu Perfil");
+      p("user-name", "Seu nome completo");
+      t("settings-title", "⚙️ Configurações");
+      t("support-title", "❓ Suporte");
+      t("support-text", "Precisa de ajuda? Fale com nosso time pelo WhatsApp: 📞 (11) 99999-9999");
     } else if (lang === 'en') {
-      document.getElementById('welcome-text').textContent = "Welcome to PokerPrime! Select a section above.";
-      document.getElementById('profile-title').textContent = "👤 My Profile";
-      document.getElementById('user-name').placeholder = "Your full name";
-      document.getElementById('settings-title').textContent = "⚙️ Settings";
-      document.getElementById('support-title').textContent = "❓ Support";
-      document.getElementById('support-text').textContent = "Need help? Contact us via WhatsApp: 📞 (11) 99999-9999";
+      t("login-title", "Login");
+      t("login-button", "Login");
+      g('<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Continue with Google');
+      p("email", "Email");
+      p("password", "Password");
+      t("welcome-text", "Welcome to PokerPrime! Select a section above.");
+      t("profile-title", "👤 My Profile");
+      p("user-name", "Your full name");
+      t("settings-title", "⚙️ Settings");
+      t("support-title", "❓ Support");
+      t("support-text", "Need help? Contact us via WhatsApp: 📞 (11) 99999-9999");
     }
   }
 
   function saveUserName() {
     const name = document.getElementById('user-name').value;
     localStorage.setItem('userName', name);
-    alert('Nome guardado!');
+    alert('Nome salvo!');
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const lang = localStorage.getItem('lang') || 'pt-PT';
+    const lang = localStorage.getItem('lang') || 'pt-BR';
     document.getElementById('language-select').value = lang;
     applyLanguage(lang);
     document.addEventListener('click', function(event) {
