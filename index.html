@@ -180,9 +180,14 @@
   }
 
   function changeLanguage(lang) {
-    localStorage.setItem('lang', lang);
+  localStorage.setItem('lang', lang);
+  const user = firebase.auth().currentUser;
+  if (user) {
+    applyLanguage(lang);
+  } else {
     location.reload();
   }
+}
 
   function saveUserName() {
     const name = document.getElementById('user-name').value;
