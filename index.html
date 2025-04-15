@@ -186,14 +186,58 @@
   }
 
   function applyLanguage(lang) {
-    if (lang === 'pt-PT') {
-      document.getElementById('welcome-text').textContent = "Bem-vindo ao PokerPrime! Seleciona uma secção acima.";
-      document.getElementById('profile-title').textContent = "👤 O Meu Perfil";
-      document.getElementById('user-name').placeholder = "O teu nome completo";
-      document.getElementById('settings-title').textContent = "⚙️ Configurações";
-      document.getElementById('support-title').textContent = "❓ Suporte";
-      document.getElementById('support-text').textContent = "Precisas de ajuda? Contacta-nos pelo WhatsApp: 📞 (11) 99999-9999";
-    } else if (lang === 'pt-BR') {
+  const elements = {
+    "login-title": document.querySelector('.login-form h2'),
+    "login-button": document.querySelectorAll('.login-form button')[0],
+    "google-button": document.querySelectorAll('.login-form button')[1],
+    "email": document.getElementById('email'),
+    "password": document.getElementById('password'),
+    "welcome-text": document.getElementById('welcome-text'),
+    "profile-title": document.getElementById('profile-title'),
+    "user-name": document.getElementById('user-name'),
+    "settings-title": document.getElementById('settings-title'),
+    "support-title": document.getElementById('support-title'),
+    "support-text": document.getElementById('support-text')
+  };
+
+  if (lang === 'pt-PT') {
+    elements["login-title"].textContent = "Iniciar sessão";
+    elements["login-button"].textContent = "Entrar";
+    elements["google-button"].innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Continuar com Google';
+    elements["email"].placeholder = "Email";
+    elements["password"].placeholder = "Senha";
+    elements["welcome-text"].textContent = "Bem-vindo ao PokerPrime! Seleciona uma secção acima.";
+    elements["profile-title"].textContent = "👤 O Meu Perfil";
+    elements["user-name"].placeholder = "O teu nome completo";
+    elements["settings-title"].textContent = "⚙️ Configurações";
+    elements["support-title"].textContent = "❓ Suporte";
+    elements["support-text"].textContent = "Precisas de ajuda? Contacta-nos pelo WhatsApp: 📞 (11) 99999-9999";
+  } else if (lang === 'pt-BR') {
+    elements["login-title"].textContent = "Login";
+    elements["login-button"].textContent = "Entrar";
+    elements["google-button"].innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Entrar com Google';
+    elements["email"].placeholder = "Email";
+    elements["password"].placeholder = "Senha";
+    elements["welcome-text"].textContent = "Bem-vindo ao PokerPrime! Selecione uma seção acima.";
+    elements["profile-title"].textContent = "👤 Meu Perfil";
+    elements["user-name"].placeholder = "Seu nome completo";
+    elements["settings-title"].textContent = "⚙️ Configurações";
+    elements["support-title"].textContent = "❓ Suporte";
+    elements["support-text"].textContent = "Precisa de ajuda? Fale com nosso time pelo WhatsApp: 📞 (11) 99999-9999";
+  } else if (lang === 'en') {
+    elements["login-title"].textContent = "Login";
+    elements["login-button"].textContent = "Login";
+    elements["google-button"].innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Continue with Google';
+    elements["email"].placeholder = "Email";
+    elements["password"].placeholder = "Password";
+    elements["welcome-text"].textContent = "Welcome to PokerPrime! Select a section above.";
+    elements["profile-title"].textContent = "👤 My Profile";
+    elements["user-name"].placeholder = "Your full name";
+    elements["settings-title"].textContent = "⚙️ Settings";
+    elements["support-title"].textContent = "❓ Support";
+    elements["support-text"].textContent = "Need help? Contact us via WhatsApp: 📞 (11) 99999-9999";
+  }
+} else if (lang === 'pt-BR') {
       document.getElementById('welcome-text').textContent = "Bem-vindo ao PokerPrime! Selecione uma seção acima.";
       document.getElementById('profile-title').textContent = "👤 Meu Perfil";
       document.getElementById('user-name').placeholder = "Seu nome completo";
