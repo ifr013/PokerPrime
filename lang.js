@@ -1,11 +1,13 @@
 // lang.js
 
 function applyLanguage(lang) {
+  const heading = document.querySelector('#dashboard h2');
   const t = (id, value) => document.getElementById(id).textContent = value;
   const p = (id, value) => document.getElementById(id).placeholder = value;
   const g = (html) => document.getElementById('google-button').innerHTML = html;
 
   if (lang === 'pt-BR') {
+    if (heading) heading.textContent = "Continuar a ver";
     t("title-tag", "PokerPrime - Sua Evolução no Poker");
     t("brand-title", "POKERPRIME");
     t("menu-home", "🏠 Início");
@@ -25,6 +27,7 @@ function applyLanguage(lang) {
     t("support-title", "❓ Suporte");
     t("support-text", "Precisa de ajuda? Fale com nosso time pelo WhatsApp: 📞 (11) 99999-9999");
   } else if (lang === 'en') {
+    if (heading) heading.textContent = "Keep Watching";
     t("title-tag", "PokerPrime - Your Evolution in Poker");
     t("brand-title", "POKERPRIME");
     t("menu-home", "🏠 Home");
