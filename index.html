@@ -4,89 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="title-tag">PokerPrime - Sua Evolução no Poker</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: white;
-    }
-    header {
-      background-color: #e50914;
-      padding: 1rem 2rem;
-      display: none;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .profile-wrapper { position: relative; }
-    #profile-menu {
-      position: absolute;
-      top: 60px;
-      right: 0;
-      background-color: #1f1f1f;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      min-width: 200px;
-      display: none;
-    }
-    #profile-menu ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    #profile-menu li {
-      padding: 10px 20px;
-      cursor: pointer;
-    }
-    #profile-menu li:hover {
-      background-color: #333;
-    }
-    .login-form {
-      background-color: #1f1f1f;
-      padding: 2rem;
-      max-width: 400px;
-      margin: 5rem auto;
-      border-radius: 10px;
-      text-align: center;
-    }
-    .login-form input, .login-form button {
-      width: 100%;
-      padding: 0.75rem;
-      margin: 0.5rem 0;
-      border-radius: 5px;
-      border: none;
-    }
-    .login-form button {
-      background-color: #e50914;
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    .google-btn {
-      background-color: #4285F4;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .google-btn img {
-      background-color: white;
-      padding: 4px;
-      border-radius: 2px;
-      margin-right: 8px;
-      width: 20px;
-      height: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 </head>
 <body>
   <header>
-    <div id="brand-title" style="font-size: 2rem; font-weight: bold;">POKERPRIME</div>
+    <div id="brand-title">POKERPRIME</div>
     <div class="profile-wrapper">
-      <img src="https://i.imgur.com/YYzGpEV.png" alt="Avatar" onclick="toggleProfileMenu()" style="width:40px;height:40px;border-radius:50%;cursor:pointer;">
+      <img src="https://i.imgur.com/YYzGpEV.png" alt="Avatar" onclick="toggleProfileMenu()">
       <div id="profile-menu">
         <ul>
           <li id="menu-home" onclick="showSection('dashboard')">🏠 Início</li>
@@ -111,18 +37,18 @@
   </div>
 
   <div id="content" style="display:none;">
-    <div id="dashboard" class="section" style="padding: 2rem;">
-      <h2>Continuar a ver</h2>
+    <div id="dashboard" class="section">
+      <h2 id="dashboard-title">Continuar a ver</h2>
       <p id="welcome-text">Bem-vindo ao PokerPrime! Selecione uma seção acima.</p>
     </div>
 
-    <div id="perfil" class="section" style="padding: 2rem;">
+    <div id="perfil" class="section">
       <h2 id="profile-title">👤 Meu Perfil</h2>
       <input type="text" id="user-name" placeholder="Seu nome completo">
       <button onclick="saveUserName()">Salvar Nome</button>
     </div>
 
-    <div id="config" class="section" style="padding: 2rem;">
+    <div id="config" class="section">
       <h2 id="settings-title">⚙️ Configurações</h2>
       <select id="language-select" onchange="changeLanguage(this.value)">
         <option value="pt-BR">🇧🇷 Português</option>
@@ -130,117 +56,13 @@
       </select>
     </div>
 
-    <div id="suporte" class="section" style="padding: 2rem;">
+    <div id="suporte" class="section">
       <h2 id="support-title">❓ Suporte</h2>
       <p id="support-text">Precisa de ajuda? Fale com nosso time pelo WhatsApp: 📞 (11) 99999-9999</p>
     </div>
   </div>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyA-dZCP81GwzZGfUfzHpvx256kUBOTnfFc",
-      authDomain: "pokerflix13.firebaseapp.com",
-      projectId: "pokerflix13",
-      storageBucket: "pokerflix13.firebasestorage.app",
-      messagingSenderId: "693579295790",
-      appId: "1:693579295790:web:1450375882cbf8bb4603bf"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const provider = new firebase.auth.GoogleAuthProvider();
-
-    function loginWithGoogle() {
-      auth.signInWithPopup(provider).then(() => showApp()).catch(e => alert(e.message));
-    }
-
-    function login() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      auth.signInWithEmailAndPassword(email, password).then(() => showApp()).catch(e => alert(e.message));
-    }
-
-    function logout() {
-      auth.signOut().then(() => location.reload());
-    }
-
-    function showApp() {
-      document.querySelector('.login-form').style.display = 'none';
-      document.querySelector('header').style.display = 'flex';
-      document.querySelector('#content').style.display = 'block';
-      applyLanguage(localStorage.getItem('lang') || 'pt-BR');
-    }
-
-    function toggleProfileMenu() {
-      const menu = document.getElementById('profile-menu');
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
-      document.getElementById(id).style.display = 'block';
-    }
-
-    function saveUserName() {
-      const name = document.getElementById('user-name').value;
-      alert(`Nome salvo: ${name}`);
-    }
-
-    function changeLanguage(lang) {
-      localStorage.setItem('lang', lang);
-      applyLanguage(lang);
-    }
-
-    function applyLanguage(lang) {
-      const t = (id, value) => document.getElementById(id).textContent = value;
-      const p = (id, value) => document.getElementById(id).placeholder = value;
-      const g = (html) => document.getElementById('google-button').innerHTML = html;
-
-      if (lang === 'pt-BR') {
-        t("title-tag", "PokerPrime - Sua Evolução no Poker");
-        t("brand-title", "POKERPRIME");
-        t("menu-home", "🏠 Início");
-        t("menu-profile", "👤 Meu Perfil");
-        t("menu-settings", "⚙️ Configurações");
-        t("menu-support", "❓ Suporte");
-        t("menu-logout", "🚪 Sair");
-        t("login-title", "Login");
-        t("login-button", "Entrar");
-        g('<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Entrar com Google');
-        p("email", "Email");
-        p("password", "Senha");
-        t("welcome-text", "Bem-vindo ao PokerPrime! Selecione uma seção acima.");
-        t("profile-title", "👤 Meu Perfil");
-        p("user-name", "Seu nome completo");
-        t("settings-title", "⚙️ Configurações");
-        t("support-title", "❓ Suporte");
-        t("support-text", "Precisa de ajuda? Fale com nosso time pelo WhatsApp: 📞 (11) 99999-9999");
-      } else if (lang === 'en') {
-        t("title-tag", "PokerPrime - Your Evolution in Poker");
-        t("brand-title", "POKERPRIME");
-        t("menu-home", "🏠 Home");
-        t("menu-profile", "👤 My Profile");
-        t("menu-settings", "⚙️ Settings");
-        t("menu-support", "❓ Support");
-        t("menu-logout", "🚪 Logout");
-        t("login-title", "Login");
-        t("login-button", "Login");
-        g('<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo"> Continue with Google');
-        p("email", "Email");
-        p("password", "Password");
-        t("welcome-text", "Welcome to PokerPrime! Select a section above.");
-        t("profile-title", "👤 My Profile");
-        p("user-name", "Your full name");
-        t("settings-title", "⚙️ Settings");
-        t("support-title", "❓ Support");
-        t("support-text", "Need help? Contact us via WhatsApp: 📞 (11) 99999-9999");
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const lang = localStorage.getItem('lang') || 'pt-BR';
-      document.getElementById('language-select').value = lang;
-      applyLanguage(lang);
-    });
-  </script>
+  <script src="lang.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
