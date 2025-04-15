@@ -1,35 +1,48 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PokerPrime - Sua Evolução no Poker</title>
+  <title>PokerPrime - A Tua Evolução no Poker</title>
   <style>
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: white;
-    }
+    body { margin: 0; font-family: Arial, sans-serif; background-color: #121212; color: white; }
     header {
       background-color: #e50914;
-      padding: 1rem;
+      padding: 1rem 2rem;
       display: none;
       justify-content: space-between;
       align-items: center;
+      position: relative;
     }
+    .profile-wrapper { position: relative; }
+    #profile-menu {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background-color: #1f1f1f;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      min-width: 200px;
+      display: none;
+    }
+    #profile-menu ul { list-style: none; padding: 0; margin: 0; }
+    #profile-menu li {
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    #profile-menu li:hover { background-color: #333; }
     .container { padding: 2rem; }
     .section { display: none; }
     .login-form {
       background-color: #1f1f1f;
       padding: 2rem;
       max-width: 400px;
-      margin: 2rem auto;
+      margin: 5rem auto;
       border-radius: 10px;
       text-align: center;
     }
-    .login-form input, .login-form button {
+    .login-form input {
       width: 100%;
       padding: 0.75rem;
       margin: 0.5rem 0;
@@ -37,147 +50,88 @@
       border: none;
     }
     .login-form button {
-      background-color: #e50914;
-      color: white;
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border-radius: 5px;
+      border: none;
       font-size: 1rem;
       cursor: pointer;
     }
-    #last-user-info {
-      display: none;
-      text-align: center;
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      background-color: #272727;
-      padding: 1rem;
-      border-radius: 8px;
-    }
-    #last-user-info img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: block;
-      margin: 0 auto 0.5rem;
-    }
-    #last-user-info button {
-      margin-top: 0.5rem;
-      padding: 0.5rem 1rem;
-      background-color: #e50914;
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #4285F4;
       color: white;
       border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      font-weight: bold;
     }
-    #profile-menu {
-      position: absolute;
-      right: 0;
-      background-color: #1f1f1f;
-      border-radius: 5px;
-      margin-top: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      min-width: 200px;
-      display: none;
-    }
-    #profile-menu ul {
-      list-style: none;
-      padding: 10px 0;
-      margin: 0;
-    }
-    #profile-menu li {
-      padding: 10px 20px;
-      cursor: pointer;
-    }
-    #profile-menu li:hover {
-      background-color: #333;
+    .google-btn img {
+      background-color: white;
+      padding: 4px;
+      border-radius: 2px;
+      margin-right: 8px;
+      width: 20px;
+      height: 20px;
     }
   </style>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 </head>
 <body>
-  <header>
-    <div style="font-size: 2rem; font-weight: bold;">POKERPRIME</div>
-    <div class="profile-wrapper">
-      <img src="https://i.imgur.com/YYzGpEV.png" alt="Avatar do usuário" style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;" onclick="toggleProfileMenu()">
-      <div id="profile-menu">
-        <ul>
-          <li onclick="showSection('perfil')">👤 Meu Perfil</li>
-          <li onclick="showSection('config')">⚙️ Configurações</li>
-          <li onclick="showSection('suporte')">❓ Suporte</li>
-          <li onclick="logout()">🚪 Sair</li>
-        </ul>
-      </div>
-    </div>
-  </header>
-
-  <div class="login-form">
-    <div id="last-user-info">
-      <img src="https://i.imgur.com/YYzGpEV.png" alt="Avatar">
-      <strong id="last-user-name"></strong>
-      <!-- <div id="last-user-email"></div> -->
-      <button onclick="quickLogin()">Entrar como este usuário</button>
-    </div>
-    <h2>Login</h2>
-    <button onclick="loginWithGoogle()" style="background-color:#4285F4; color:white; padding:0.75rem; border:none; border-radius:5px; margin-bottom:1rem;">Entrar com Google</button>
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="password" id="password" placeholder="Senha" required>
-    <button onclick="login()">Entrar</button>
-  </div>
-
-  <div id="content" style="display:none;">
-    <div class="container">
-      <div id="dashboard" class="section" style="display:block;">
-        <h2>Continue assistindo</h2>
-        <p>Bem-vindo ao PokerPrime! Selecione uma das seções no menu acima.</p>
-      </div>
-
-      <div id="perfil" class="section" style="max-width: 600px; margin: auto; background-color: #1e1e1e; border-radius: 10px; padding: 2rem;">
-  <h2 style="text-align: center;">👤 Meu Perfil</h2>
-  <div style="text-align: center;">
-    <img id="user-avatar" src="https://i.imgur.com/YYzGpEV.png" alt="Foto de perfil" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem;">
-    <br>
-    <input type="file" accept="image/*" onchange="loadAvatar(event)">
-  </div>
-  <p><strong>Email:</strong> <span id="user-email"></span></p>
-  <p><strong>Nome:</strong> <input type="text" id="user-name" placeholder="Seu nome completo" style="width: 100%; padding: 0.5rem;"></p>
-  <button id="save-name" style="width: 100%; padding: 0.75rem; background-color: #e50914; color: white; border: none; border-radius: 5px; cursor: pointer;">Salvar Nome</button>
-</div>
-
-      <div id="config" class="section" style="max-width: 600px; margin: auto; background-color: #1e1e1e; border-radius: 10px; padding: 2rem;">
-  <h2 style="text-align: center;">⚙️ Configurações</h2>
-  <ul style="padding-left: 1.2rem;">
-    <li>
-      <label style="display: flex; justify-content: space-between; align-items: center;">
-        Modo Escuro/Claro
-        <button onclick="toggleTheme()" style="margin-left: 1rem; background: #333; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer;">Alternar</button>
-      </label>
-    </li>
-    <li style="margin-top: 1rem;">
-      <label style="display: flex; justify-content: space-between; align-items: center;">
-        Idioma do conteúdo
-        <select id="language-select" onchange="changeLanguage(this.value)" style="margin-left: 1rem; padding: 0.4rem; border-radius: 5px;">
-          <option value="es-VE">🇻🇪 Español (Venezuela)</option>
-          <option value="es-AR">🇦🇷 Español (Argentina)</option>
-          <option value="es-PE">🇵🇪 Español (Perú)</option>
-          <option value="es-BO">🇧🇴 Español (Bolivia)</option>
-          <option value="pt-BR">🇧🇷 Português</option>
-          <option value="en">🇺🇸 English</option>
-        </select>
-      </label>
-    </li>
-  </ul>
-  <button id="toggle-theme" style="width: 100%; padding: 0.75rem; background-color: #444; color: white; border: none; border-radius: 5px; cursor: pointer;">Alternar Tema</button>
-</div>
-
-      <div id="suporte" class="section" style="max-width: 600px; margin: auto; background-color: #1e1e1e; border-radius: 10px; padding: 2rem;">
-  <h2 style="text-align: center;">❓ Suporte</h2>
-  <p>Precisa de ajuda? Fale com nosso time pelo WhatsApp:</p>
-  <p style="text-align: center; font-size: 1.2rem; font-weight: bold;">📞 (11) 99999-9999</p>
-  <p style="font-size: 0.9rem; color: #bbb; text-align: center;">Atendimento das 9h às 18h, de segunda a sexta.</p>
-</div>
+<header>
+  <div style="font-size: 2rem; font-weight: bold;">POKERPRIME</div>
+  <div class="profile-wrapper">
+    <img src="https://i.imgur.com/YYzGpEV.png" alt="Avatar do utilizador" onclick="toggleProfileMenu()" style="width:40px;height:40px;border-radius:50%;cursor:pointer;">
+    <div id="profile-menu">
+      <ul>
+        <li onclick="showSection('dashboard')">🏠 Início</li>
+        <li onclick="showSection('perfil')">👤 O Meu Perfil</li>
+        <li onclick="showSection('config')">⚙️ Configurações</li>
+        <li onclick="showSection('suporte')">❓ Suporte</li>
+        <li onclick="logout()">🚪 Sair</li>
+      </ul>
     </div>
   </div>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, signOut, updateProfile, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-
+</header>
+<div class="login-form">
+  <h2>Iniciar sessão</h2>
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Senha" required>
+  <button onclick="login()">Entrar</button>
+  <button class="google-btn" onclick="loginWithGoogle()">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+    Continuar com Google
+  </button>
+</div>
+<div id="content" style="display:none;">
+  <div class="container">
+    <div id="dashboard" class="section" style="display:block;">
+      <h2>Continuar a ver</h2>
+      <p>Bem-vindo ao PokerPrime! Seleciona uma secção acima.</p>
+    </div>
+    <div id="perfil" class="section">
+      <h2>👤 O Meu Perfil</h2>
+      <input type="text" id="user-name" placeholder="O teu nome completo">
+      <button onclick="saveUserName()">Guardar Nome</button>
+    </div>
+    <div id="config" class="section">
+      <h2>⚙️ Configurações</h2>
+      <button onclick="toggleTheme()">Alternar Tema</button>
+      <select id="language-select" onchange="changeLanguage(this.value)">
+        <option value="pt-PT">🇵🇹 Português (Portugal)</option>
+        <option value="pt-BR">🇧🇷 Português (Brasil)</option>
+        <option value="en">🇺🇸 English</option>
+      </select>
+    </div>
+    <div id="suporte" class="section">
+      <h2>❓ Suporte</h2>
+      <p>Precisas de ajuda? Contacta-nos pelo WhatsApp: 📞 (11) 99999-9999</p>
+    </div>
+  </div>
+</div>
+<script>
   const firebaseConfig = {
     apiKey: "AIzaSyA-dZCP81GwzZGfUfzHpvx256kUBOTnfFc",
     authDomain: "pokerflix13.firebaseapp.com",
@@ -187,242 +141,66 @@
     appId: "1:693579295790:web:1450375882cbf8bb4603bf",
     measurementId: "G-7SFBNGECLV"
   };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const provider = new firebase.auth.GoogleAuthProvider();
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+  function loginWithGoogle() {
+    auth.signInWithPopup(provider).then(() => showApp()).catch(e => alert(e.message));
+  }
 
-  window.login = function () {
+  function login() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    loginWithCredentials(email, password);
+    auth.signInWithEmailAndPassword(email, password).then(() => showApp()).catch(e => alert(e.message));
   }
 
-  function loginWithCredentials(email, password) {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        document.querySelector('.login-form').style.display = 'none';
-        document.querySelector('header').style.display = 'flex';
-        document.querySelector('#content').style.display = 'block';
-        updateUserInfo(userCredential.user);
-
-        // Salvar dados localmente
-        localStorage.setItem('lastUserEmail', userCredential.user.email);
-        if (userCredential.user.displayName) {
-          localStorage.setItem('lastUserName', userCredential.user.displayName);
-          document.getElementById('last-user-name').textContent = userCredential.user.displayName;
-        }
-
-        document.getElementById('last-user-info').style.display = 'block';
-        // document.getElementById('last-user-email').textContent = '';
-      })
-      .catch((error) => {
-        alert('Erro ao logar: ' + error.message);
-      });
+  function logout() {
+    auth.signOut().then(() => location.reload());
   }
 
-  function updateUserInfo(user) {
-    document.getElementById('user-email').textContent = user.email;
-    document.getElementById('user-name').value = user.displayName || '';
-}
-  document.addEventListener('DOMContentLoaded', () => {
-    const lastUser = localStorage.getItem('lastUserEmail');
-    const lastName = localStorage.getItem('lastUserName');
-    if (lastUser) {
-      document.getElementById('last-user-info').style.display = 'block';
-      // document.getElementById('last-user-email').textContent = lastUser;
-      if (lastName) {
-        document.getElementById('last-user-name').textContent = lastName;
-      }
-    }
-  });
-
-  window.quickLogin = function () {
-    const email = localStorage.getItem('lastUserEmail');
-    const password = prompt("Digite sua senha para entrar como " + email);
-    if (email && password) {
-      loginWithCredentials(email, password);
-    }
-  }
-
-  window.loginWithGoogle = function () {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        document.querySelector('.login-form').style.display = 'none';
-        document.querySelector('header').style.display = 'flex';
-        document.querySelector('#content').style.display = 'block';
-        updateUserInfo(user);
-
-        // Salvar dados localmente
-        localStorage.setItem('lastUserEmail', user.email);
-        localStorage.setItem('lastUserName', user.displayName);
-        localStorage.setItem('userAvatar', user.photoURL);
-
-        document.getElementById('last-user-name').textContent = user.displayName;
-        document.getElementById('last-user-info').style.display = 'block';
-        document.querySelector('#last-user-info img').src = user.photoURL;
-        document.querySelector('header .profile-wrapper img').src = user.photoURL;
-      })
-      .catch((error) => {
-        alert('Erro ao logar com Google: ' + error.message);
-      });
-  };
-
-  window.logout = function () {
-    signOut(auth).then(() => {
-      document.querySelector('#content').style.display = 'none';
-      document.querySelector('header').style.display = 'none';
-      document.querySelector('.login-form').style.display = 'block';
-    });
-  }
-
-  window.showSection = function(id) {
-    document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
+  function showApp() {
+    document.querySelector('.login-form').style.display = 'none';
+    document.querySelector('header').style.display = 'flex';
+    document.querySelector('#content').style.display = 'block';
   }
 
   function toggleProfileMenu() {
     const menu = document.getElementById('profile-menu');
     menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
   }
-  window.toggleProfileMenu = toggleProfileMenu;
 
-  window.addEventListener('click', function(e) {
-    const wrapper = document.querySelector('.profile-wrapper');
-    const menu = document.getElementById('profile-menu');
-    if (menu && wrapper && !wrapper.contains(e.target)) {
-      menu.style.display = 'none';
-    }
-  });
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      document.querySelector('.login-form').style.display = 'none';
-      document.querySelector('header').style.display = 'flex';
-      document.querySelector('#content').style.display = 'block';
-      updateUserInfo(user);
-
-      const saveBtn = document.getElementById('save-name');
-      if (saveBtn) {
-        saveBtn.addEventListener('click', () => {
-          const newName = document.getElementById('user-name').value;
-          if (user && newName) {
-            updateProfile(user, { displayName: newName }).then(() => {
-              localStorage.setItem('lastUserName', newName);
-              document.getElementById('last-user-name').textContent = newName;
-              alert('Nome atualizado com sucesso!');
-            }).catch((error) => {
-              alert('Erro ao salvar nome: ' + error.message);
-            });
-          }
-        });
-      }
-    } else {
-      document.querySelector('header').style.display = 'none';
-    }
-  });
-</script>
-<script>
-  function loadAvatar(event) {
-    const image = document.getElementById('user-avatar');
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        image.src = e.target.result;
-        localStorage.setItem('userAvatar', e.target.result);
-        document.querySelector('#last-user-info img').src = e.target.result;
-        document.querySelector('header .profile-wrapper img').src = e.target.result;
-      }
-      reader.readAsDataURL(file);
-    }
+  function showSection(section) {
+    document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
+    document.getElementById(section).style.display = 'block';
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const savedAvatar = localStorage.getItem('userAvatar');
-    if (savedAvatar) {
-      document.getElementById('user-avatar').src = savedAvatar;
-      document.querySelector('#last-user-info img').src = savedAvatar;
-      document.querySelector('header .profile-wrapper img').src = savedAvatar;
-    }
-  });
-</script>
-<script>
   function toggleTheme() {
-    const currentTheme = document.body.dataset.theme || 'dark';
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.body.dataset.theme = newTheme;
-    document.body.style.backgroundColor = newTheme === 'light' ? '#f2f2f2' : '#121212';
-    document.body.style.color = newTheme === 'light' ? '#000' : '#fff';
-    localStorage.setItem('theme', newTheme);
+    document.body.classList.toggle('light-mode');
   }
 
   function changeLanguage(lang) {
-    localStorage.setItem('language', lang);
-    applyLanguage(lang);
-}
+    localStorage.setItem('lang', lang);
+    location.reload();
+  }
+
+  function saveUserName() {
+    const name = document.getElementById('user-name').value;
+    localStorage.setItem('userName', name);
+    alert('Nome guardado!');
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    const savedLang = localStorage.getItem('language');
-    if (savedTheme && savedTheme === 'light') toggleTheme();
-    if (savedLang) document.getElementById('language-select').value = savedLang;
+    const lang = localStorage.getItem('lang') || 'pt-PT';
+    document.getElementById('language-select').value = lang;
+    document.addEventListener('click', function(event) {
+      const profile = document.querySelector('.profile-wrapper');
+      const menu = document.getElementById('profile-menu');
+      if (menu && profile && !profile.contains(event.target)) {
+        menu.style.display = 'none';
+      }
+    });
   });
-</script>
-<script>
-function applyLanguage(lang) {
-  if (!lang) return;
-  if (lang === 'pt-BR') {
-    document.querySelector('#dashboard h2').textContent = "Continue assistindo";
-    document.querySelector('#dashboard p').textContent = "Bem-vindo ao PokerPrime! Selecione uma das seções no menu acima.";
-    document.querySelector('#perfil h2').textContent = "👤 Meu Perfil";
-    document.querySelector('#perfil p strong').textContent = "Email:";
-    document.querySelector('#perfil p:nth-of-type(2) strong').textContent = "Nome:";
-    document.getElementById('user-name').placeholder = "Seu nome completo";
-    document.getElementById('save-name').textContent = "Salvar Nome";
-    document.querySelector('#config h2').textContent = "⚙️ Configurações";
-    document.querySelector('#config ul li label').childNodes[0].textContent = "Modo Escuro/Claro";
-    document.querySelector('#toggle-theme').textContent = "Alternar Tema";
-    document.querySelector('#language-select').previousSibling.textContent = "Idioma";
-    document.querySelector('#suporte h2').textContent = "❓ Suporte";
-    document.querySelector('#suporte p').textContent = "Precisa de ajuda? Fale com nosso time pelo WhatsApp:";
-    document.querySelector('#suporte p:nth-of-type(3)').textContent = "Atendimento das 9h às 18h, de segunda a sexta.";
-    document.querySelectorAll('#profile-menu li')[0].textContent = "👤 Meu Perfil";
-    document.querySelectorAll('#profile-menu li')[1].textContent = "⚙️ Configurações";
-    document.querySelectorAll('#profile-menu li')[2].textContent = "❓ Suporte";
-    document.querySelectorAll('#profile-menu li')[3].textContent = "🚪 Sair";
-    document.querySelector('.login-form h2').textContent = "Login";
-    document.getElementById('email').placeholder = "Email";
-    document.getElementById('password').placeholder = "Senha";
-    document.querySelector('.login-form button').textContent = "Entrar";
-    document.querySelector('#last-user-info button').textContent = "Entrar como este usuário";
-  } else if (lang === 'en') {
-    document.querySelector('#dashboard h2').textContent = "Keep watching";
-    document.querySelector('#dashboard p').textContent = "Welcome to PokerPrime! Select a section from the menu above.";
-    document.querySelector('#perfil h2').textContent = "👤 My Profile";
-    document.querySelector('#perfil p strong').textContent = "Email:";
-    document.querySelector('#perfil p:nth-of-type(2) strong').textContent = "Name:";
-    document.getElementById('user-name').placeholder = "Your full name";
-    document.getElementById('save-name').textContent = "Save Name";
-    document.querySelector('#config h2').textContent = "⚙️ Settings";
-    document.querySelector('#config ul li label').childNodes[0].textContent = "Dark/Light Mode";
-    document.querySelector('#toggle-theme').textContent = "Toggle Theme";
-    document.querySelector('#language-select').previousSibling.textContent = "Language";
-    document.querySelector('#suporte h2').textContent = "❓ Support";
-    document.querySelector('#suporte p').textContent = "Need help? Contact our team via WhatsApp:";
-    document.querySelector('#suporte p:nth-of-type(3)').textContent = "Support available Mon–Fri, 9am to 6pm.";
-    document.querySelectorAll('#profile-menu li')[0].textContent = "👤 My Profile";
-    document.querySelectorAll('#profile-menu li')[1].textContent = "⚙️ Settings";
-    document.querySelectorAll('#profile-menu li')[2].textContent = "❓ Support";
-    document.querySelectorAll('#profile-menu li')[3].textContent = "🚪 Logout";
-    document.querySelector('.login-form h2').textContent = "Login";
-    document.getElementById('email').placeholder = "Email";
-    document.getElementById('password').placeholder = "Password";
-    document.querySelector('.login-form button').textContent = "Enter";
-    document.querySelector('#last-user-info button').textContent = "Log in as this user";
-  }
-}
 </script>
 </body>
 </html>
