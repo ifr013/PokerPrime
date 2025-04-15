@@ -1,7 +1,7 @@
 // lang.js
 
 function applyLanguage(lang) {
-  const heading = document.querySelector('#dashboard h2');
+  const heading = document.getElementById('dashboard-title');
   const t = (id, value) => document.getElementById(id).textContent = value;
   const p = (id, value) => document.getElementById(id).placeholder = value;
   const g = (html) => document.getElementById('google-button').innerHTML = html;
