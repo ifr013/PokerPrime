@@ -20,43 +20,12 @@ const provider = new firebase.auth.GoogleAuthProvider();
 
 function loginWithGoogle() {
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-    .then(() => {
-      return auth.signInWithPopup(provider);
-    })
+    .then(() => auth.signInWithPopup(provider))
     .then((result) => {
       localStorage.setItem('photoURL', result.user.photoURL || '');
       showApp();
     })
     .catch(e => alert(e.message));
-}
-    .then((result) => {
-      localStorage.setItem('photoURL', result.user.photoURL || '');
-      showApp();
-    })
-    .catch(e => alert(e.message));
-})
-    .then((result) => {
-      localStorage.setItem('photoURL', result.user.photoURL || '');
-      showApp();
-    })
-    .catch(e => alert(e.message));
-})
-    .then((result) => {
-      localStorage.setItem('photoURL', result.user.photoURL || '');
-      showApp();
-    })
-    .catch(e => alert(e.message));
-})
-    .then((result) => {
-      localStorage.setItem('photoURL', result.user.photoURL || '');
-      showApp();
-    })
-    .catch(e => alert(e.message));
-}.then((result) => {
-    localStorage.setItem('photoURL', result.user.photoURL || '');
-    showApp();
-  }).catch(e => alert(e.message));
-}).catch(e => alert(e.message));
 }
 
 function login() {
