@@ -41,7 +41,11 @@ function toggleProfileMenu() {
 
 function showSection(id) {
   document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
+  const section = document.getElementById(id);
+  if (section) {
+    section.style.display = 'block';
+    applyLanguage(localStorage.getItem('lang') || 'pt-BR');
+  }
 }
 
 function saveUserName() {
