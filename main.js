@@ -44,13 +44,18 @@ function showApp() {
   document.querySelector('header').style.display = 'flex';
   document.querySelector('#content').style.display = 'block';
 
-  // Atualiza avatar
   const user = firebase.auth().currentUser || { photoURL: localStorage.getItem('photoURL') };
   const avatar = document.getElementById('user-avatar');
   if (user && user.photoURL) {
     avatar.src = user.photoURL;
   } else {
-    avatar.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png'; // imagem padrão tipo boneco
+    avatar.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+  }
+
+  // Preenche campos do perfil se vier do Google
+  if (user) {
+    if (user.displayName) document.getElementById('user-name').value = user.displayName;
+    if (user.email) document.getElementById('user-email').value = user.email;
   }
 
   applyLanguage(localStorage.getItem('lang') || 'pt-BR');
