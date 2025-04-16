@@ -18,16 +18,21 @@ const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 
 function loginWithGoogle() {
-  auth.signInWithPopup(provider).then((result) => {
+  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+    return auth.signInWithPopup(provider);
+  }).then((result) => {
     localStorage.setItem('photoURL', result.user.photoURL || '');
     showApp();
   }).catch(e => alert(e.message));
+}).catch(e => alert(e.message));
 }
 
 function login() {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
-  auth.signInWithEmailAndPassword(email, password).then(() => showApp()).catch(e => alert(e.message));
+  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+    return auth.signInWithEmailAndPassword(email, password);
+  }).then(() => showApp()).catch(e => alert(e.message));
 }
 
 function logout() {
