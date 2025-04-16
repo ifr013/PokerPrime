@@ -19,9 +19,16 @@ const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 
 function loginWithGoogle() {
-  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
-    return auth.signInWithPopup(provider);
-  }).then((result) => {
+  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(() => {
+      return auth.signInWithPopup(provider);
+    })
+    .then((result) => {
+      localStorage.setItem('photoURL', result.user.photoURL || '');
+      showApp();
+    })
+    .catch(e => alert(e.message));
+}.then((result) => {
     localStorage.setItem('photoURL', result.user.photoURL || '');
     showApp();
   }).catch(e => alert(e.message));
@@ -41,6 +48,19 @@ function logout() {
 }
 
 function showApp() {
+  const user = firebase.auth().currentUser;
+  if (!user) return;
+
+  db.collection('usuarios').doc(user.uid).get().then((doc) => {
+    if (doc.exists) {
+      const data = doc.data();
+      if (data.nome) document.getElementById('user-name').value = data.nome;
+      if (data.email) document.getElementById('user-email').value = data.email;
+      if (data.cpf) document.getElementById('user-cpf').value = data.cpf;
+      if (data.nascimento) document.getElementById('user-birth').value = data.nascimento;
+      if (data.telefone) document.getElementById('user-phone').value = data.telefone;
+    }
+  }).catch((error) => console.error('Erro ao carregar dados:', error));
   document.querySelector('.login-form').style.display = 'none';
   document.querySelector('header').style.display = 'flex';
   document.querySelector('#content').style.display = 'block';
