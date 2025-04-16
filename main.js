@@ -34,6 +34,12 @@ function loginWithGoogle() {
       showApp();
     })
     .catch(e => alert(e.message));
+})
+    .then((result) => {
+      localStorage.setItem('photoURL', result.user.photoURL || '');
+      showApp();
+    })
+    .catch(e => alert(e.message));
 }.then((result) => {
     localStorage.setItem('photoURL', result.user.photoURL || '');
     showApp();
