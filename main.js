@@ -102,21 +102,4 @@ function saveUserName() {
   firebase.firestore().collection('usuarios').doc(uid).set(data)
     .then(() => alert('Dados salvos com sucesso!'))
     .catch(error => alert('Erro ao salvar: ' + error.message));
-}`);
 }
-
-function changeLanguage(lang) {
-  localStorage.setItem('lang', lang);
-  applyLanguage(lang);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      showApp();
-    }
-  });
-  const lang = localStorage.getItem('lang') || 'pt-BR';
-  document.getElementById('language-select').value = lang;
-  applyLanguage(lang);
-});
