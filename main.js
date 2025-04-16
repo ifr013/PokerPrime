@@ -41,7 +41,7 @@ function logout() {
 }
 
 function showApp() {
-  const user = firebase.auth().currentUser;
+  const user = firebase.auth().currentUser || { photoURL: localStorage.getItem('photoURL') };
   if (!user) return;
 
   db.collection('usuarios').doc(user.uid).get().then((doc) => {
@@ -54,23 +54,20 @@ function showApp() {
       if (data.telefone) document.getElementById('user-phone').value = data.telefone;
     }
   }).catch((error) => console.error('Erro ao carregar dados:', error));
+
   document.querySelector('.login-form').style.display = 'none';
   document.querySelector('header').style.display = 'flex';
   document.querySelector('#content').style.display = 'block';
 
-  const user = firebase.auth().currentUser || { photoURL: localStorage.getItem('photoURL') };
   const avatar = document.getElementById('user-avatar');
-  if (user && user.photoURL) {
+  if (user.photoURL) {
     avatar.src = user.photoURL;
   } else {
     avatar.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
   }
 
-  // Preenche campos do perfil se vier do Google
-  if (user) {
-    if (user.displayName) document.getElementById('user-name').value = user.displayName;
-    if (user.email) document.getElementById('user-email').value = user.email;
-  }
+  if (user.displayName) document.getElementById('user-name').value = user.displayName;
+  if (user.email) document.getElementById('user-email').value = user.email;
 
   applyLanguage(localStorage.getItem('lang') || 'pt-BR');
 }
