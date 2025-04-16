@@ -76,6 +76,11 @@ function changeLanguage(lang) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      showApp();
+    }
+  });
   const lang = localStorage.getItem('lang') || 'pt-BR';
   document.getElementById('language-select').value = lang;
   applyLanguage(lang);
