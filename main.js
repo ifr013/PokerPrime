@@ -9,6 +9,7 @@ const firebaseConfig = {
   appId: "1:693579295790:web:1450375882cbf8bb4603bf"
 };
 firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(error) {
   console.error("Erro ao configurar persistência:", error);
@@ -76,8 +77,22 @@ function showSection(id) {
 }
 
 function saveUserName() {
-  const name = document.getElementById('user-name').value;
-  alert(`Nome salvo: ${name}`);
+  const user = firebase.auth().currentUser;
+  if (!user) return alert('Você precisa estar logado.');
+
+  const uid = user.uid;
+  const data = {
+    nome: document.getElementById('user-name').value,
+    email: document.getElementById('user-email').value,
+    cpf: document.getElementById('user-cpf').value,
+    nascimento: document.getElementById('user-birth').value,
+    telefone: document.getElementById('user-phone').value
+  };
+
+  firebase.firestore().collection('usuarios').doc(uid).set(data)
+    .then(() => alert('Dados salvos com sucesso!'))
+    .catch(error => alert('Erro ao salvar: ' + error.message));
+}`);
 }
 
 function changeLanguage(lang) {
