@@ -31,6 +31,16 @@ function showApp() {
   document.querySelector('.login-form').style.display = 'none';
   document.querySelector('header').style.display = 'flex';
   document.querySelector('#content').style.display = 'block';
+
+  // Atualiza avatar
+  const user = firebase.auth().currentUser;
+  const avatar = document.getElementById('user-avatar');
+  if (user && user.photoURL) {
+    avatar.src = user.photoURL;
+  } else {
+    avatar.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png'; // imagem padrão tipo boneco
+  }
+
   applyLanguage(localStorage.getItem('lang') || 'pt-BR');
 }
 
