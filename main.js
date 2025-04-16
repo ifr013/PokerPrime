@@ -10,11 +10,18 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(error) {
+  console.error("Erro ao configurar persistência:", error);
+});
+
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 
 function loginWithGoogle() {
-  auth.signInWithPopup(provider).then(() => showApp()).catch(e => alert(e.message));
+  auth.signInWithPopup(provider).then((result) => {
+    localStorage.setItem('photoURL', result.user.photoURL || '');
+    showApp();
+  }).catch(e => alert(e.message));
 }
 
 function login() {
@@ -33,7 +40,7 @@ function showApp() {
   document.querySelector('#content').style.display = 'block';
 
   // Atualiza avatar
-  const user = firebase.auth().currentUser;
+  const user = firebase.auth().currentUser || { photoURL: localStorage.getItem('photoURL') };
   const avatar = document.getElementById('user-avatar');
   if (user && user.photoURL) {
     avatar.src = user.photoURL;
